@@ -19,6 +19,8 @@ internal class ItemControllerTest {
     @Autowired
     lateinit var mockMvc: MockMvc
 
+    val baseUrl = "/api/items"
+
     @Nested
     @DisplayName("getItems()")
     @TestInstance(PER_CLASS)
@@ -26,7 +28,7 @@ internal class ItemControllerTest {
         @Test
         fun `should return all items`() {
 
-            mockMvc.get("/api/items")
+            mockMvc.get(baseUrl)
                     .andDo { print() }
                     .andExpect {
                         status {
@@ -43,10 +45,11 @@ internal class ItemControllerTest {
     @DisplayName("getItem()")
     @TestInstance(PER_CLASS)
     inner class GetAnItems {
+
         @Test
         fun `should return the item with given item id`() {
             val itemId = 111
-            mockMvc.get("/api/items/$itemId")
+            mockMvc.get("$baseUrl/$itemId")
                     .andDo { print() }
                     .andExpect {
                         status {
@@ -55,6 +58,16 @@ internal class ItemControllerTest {
                         }
                         jsonPath("$.supplierPrice") { value("1000.55") }
                         jsonPath("$.itemName") { value("Macbook") }
+                    }
+        }
+
+        @Test
+        fun `should return NOT FOUND if an item id is not present`() {
+            val itemId = "does_not_exist"
+            mockMvc.get("$baseUrl/$itemId")
+                    .andDo { print() }
+                    .andExpect {
+                        status { isNotFound() }
                     }
         }
     }

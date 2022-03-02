@@ -15,6 +15,7 @@ class MockItemDataSource : ItemDataSource {
 
     override fun getAllItems(): Collection<Item> = items
 
-    override fun getAnItem(id: String): Item = items.first{ it.itemId == id }
+    override fun getAnItem(id: String): Item = items.firstOrNull() { it.itemId == id }
+            ?: throw NoSuchElementException("Could not find an item with item id $id")
 
 }
