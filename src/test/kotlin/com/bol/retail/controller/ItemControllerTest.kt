@@ -11,7 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType.APPLICATION_JSON
-import org.springframework.test.web.servlet.*
+import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.delete
+import org.springframework.test.web.servlet.get
+import org.springframework.test.web.servlet.patch
+import org.springframework.test.web.servlet.post
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -49,7 +53,7 @@ internal class ItemControllerTest @Autowired constructor(
 
         @Test
         fun `should return the item with given item id`() {
-            val itemId = 111
+            val itemId = "111"
             mockMvc.get("$baseUrl/$itemId")
                 .andDo { print() }
                 .andExpect {
@@ -74,7 +78,7 @@ internal class ItemControllerTest @Autowired constructor(
     }
 
     @Nested
-    @DisplayName("Add an item")
+    @DisplayName("addItem()")
     @TestInstance(PER_CLASS)
     inner class PostNewItem {
 
