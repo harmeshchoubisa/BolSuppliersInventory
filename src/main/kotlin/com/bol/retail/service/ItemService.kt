@@ -9,5 +9,6 @@ class ItemService (private val dataSource: ItemDataSource){
     fun getAllItems(): Collection<Item> = dataSource.getAllItems()
 
     fun getAnItem(id: String): Item = dataSource.getAnItem(id)
+    fun addItem(item: Item): Item = dataSource.createItem(item)
 
 }

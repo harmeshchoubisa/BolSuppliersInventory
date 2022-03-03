@@ -6,4 +6,6 @@ interface ItemDataSource {
 
     fun getAllItems() : Collection<Item>
     fun getAnItem(id: String): Item
+    fun createItem(item: Item): Item
+
 }

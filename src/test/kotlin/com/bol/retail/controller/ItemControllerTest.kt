@@ -1,5 +1,7 @@
 package com.bol.retail.controller
 
+import com.bol.retail.model.Item
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -11,13 +13,14 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
+import org.springframework.test.web.servlet.post
 
 @SpringBootTest
 @AutoConfigureMockMvc
-internal class ItemControllerTest {
-
-    @Autowired
-    lateinit var mockMvc: MockMvc
+internal class ItemControllerTest @Autowired constructor(
+        val mockMvc: MockMvc,
+        val objectMapper: ObjectMapper
+) {
 
     val baseUrl = "/api/items"
 
@@ -69,6 +72,52 @@ internal class ItemControllerTest {
                     .andExpect {
                         status { isNotFound() }
                     }
+        }
+    }
+
+    @Nested
+    @DisplayName("Add an item")
+    @TestInstance(PER_CLASS)
+    inner class PostNewItem {
+
+        @Test
+        fun `should add a new item`() {
+
+            val newItem = Item("114", "Television", "Philips", 400.34, 755.67)
+
+            val performPost = mockMvc.post(baseUrl) {
+                contentType = APPLICATION_JSON
+                content = objectMapper.writeValueAsString(newItem)
+            }
+
+            performPost
+                    .andDo { print() }
+                    .andExpect {
+                        status { isCreated() }
+                        content { contentType(APPLICATION_JSON) }
+                        jsonPath("$.itemId") {value("114")}
+                        jsonPath("$.itemName") {value("Television")}
+                        jsonPath("$.supplierName") {value("Philips")}
+                        jsonPath("$.supplierPrice") {value("400.34")}
+                        jsonPath("$.consumerPrice") {value("755.67")}
+                    }
+        }
+
+        @Test
+        fun `should return BAD REQUEST if item with given id already exists`() {
+            val invalidItem = Item("111", "doesNotMatter","doesNotMatter",100.56,455.56)
+
+            val performPost = mockMvc.post(baseUrl) {
+                contentType = APPLICATION_JSON
+                content = objectMapper.writeValueAsString(invalidItem)
+            }
+
+            performPost
+                    .andDo { print() }
+                    .andExpect {
+                        status { isBadRequest() }
+                    }
+
         }
     }
 
