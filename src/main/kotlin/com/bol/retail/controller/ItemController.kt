@@ -4,8 +4,10 @@ import com.bol.retail.model.Item
 import com.bol.retail.service.ItemService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -34,6 +36,13 @@ class ItemController( private val service : ItemService) {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun addItem(@RequestBody item: Item): Item = service.addItem(item)
+
+    @PatchMapping
+    fun patchItem(@RequestBody item: Item): Item = service.patchItem(item)
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deleteItem(@PathVariable id: String) = service.deleteItem(id)
 
 
 }

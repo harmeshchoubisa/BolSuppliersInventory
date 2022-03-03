@@ -10,5 +10,7 @@ class ItemService (private val dataSource: ItemDataSource){
 
     fun getAnItem(id: String): Item = dataSource.getAnItem(id)
     fun addItem(item: Item): Item = dataSource.createItem(item)
+    fun patchItem(item: Item): Item = dataSource.updateItem(item)
+    fun deleteItem(id: String): Unit = dataSource.deleteItem(id)
 
 }

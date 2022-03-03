@@ -26,4 +26,20 @@ class MockItemDataSource : ItemDataSource {
         return item
     }
 
+    override fun updateItem(item: Item): Item {
+        val currentItem = items.firstOrNull() { it.itemId == item.itemId }
+            ?: throw NoSuchElementException("Could not find an item with item id ${item.itemId}")
+
+        items.remove(currentItem)
+        items.add(item)
+        return item
+    }
+
+    override fun deleteItem(id: String) {
+        val currentItem = items.firstOrNull() { it.itemId == id }
+            ?: throw NoSuchElementException("Could not find an item with item id $id}")
+
+        items.remove(currentItem)
+    }
+
 }
